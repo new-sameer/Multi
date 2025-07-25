@@ -10,7 +10,8 @@ import {
   CurrencyDollarIcon,
   TrendingUpIcon,
   CalendarIcon,
-  SparklesIcon
+  SparklesIcon,
+  HomeIcon
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
