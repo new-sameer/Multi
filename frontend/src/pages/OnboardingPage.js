@@ -10,7 +10,9 @@ import {
   SparklesIcon,
   TrophyIcon,
   CurrencyDollarIcon,
-  CalendarIcon
+  CalendarIcon,
+  UserGroupIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 
 const steps = [
