@@ -8,10 +8,9 @@ import {
   DocumentDuplicateIcon,
   UserGroupIcon,
   CurrencyDollarIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   CalendarIcon,
-  SparklesIcon,
-  HomeIcon
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
