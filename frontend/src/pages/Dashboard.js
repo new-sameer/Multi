@@ -131,7 +131,7 @@ export default function Dashboard() {
       unit: '%',
       change: '+0.8%',
       changeType: 'positive',
-      icon: TrendingUpIcon,
+      icon: ArrowTrendingUpIcon,
     },
     {
       name: 'Total Earnings',
