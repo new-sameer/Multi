@@ -1,0 +1,74 @@
+# Social Media Automation Platform - Python Dependencies
+
+# FastAPI and Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Database
+motor==3.3.2  # Async MongoDB driver
+pymongo==4.6.0
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-jwt==4.0.0
+PyJWT==2.8.0
+
+# Data Validation
+pydantic[email]==2.5.0
+
+# HTTP Requests
+httpx==0.25.2
+aiohttp==3.9.1
+
+# Environment Variables
+python-dotenv==1.0.0
+
+# Background Tasks
+celery==5.3.4
+redis==5.0.1
+
+# AI/ML Libraries (for future phases)
+openai==1.3.8
+anthropic==0.7.8
+groq==0.4.1
+
+# Image Processing (for future phases)
+Pillow==10.1.0
+
+# Date/Time Utilities
+python-dateutil==2.8.2
+
+# Logging and Monitoring
+structlog==23.2.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2  # For testing FastAPI
+
+# Development Tools
+black==23.11.0
+flake8==6.1.0
+isort==5.12.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.25.2
+
+# Web Scraping (for viral content analysis)
+beautifulsoup4==4.12.2
+scrapy==2.11.0
+
+# Voice Processing (for future phases)
+speechrecognition==3.10.0
+pydub==0.25.1
+
+# Social Media APIs (for future phases)
+tweepy==4.14.0
+instagrapi==2.0.0
+
+# Utilities
+validators==0.22.0
+urllib3==2.1.0
