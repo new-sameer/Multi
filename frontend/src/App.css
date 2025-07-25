@@ -48,7 +48,7 @@
   }
   
   .form-textarea {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500 focus:ring-opacity-20 focus:border-blue-500 transition-all duration-200 bg-white resize-vertical min-h-[120px];
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500 focus:ring-opacity-20 focus:border-blue-500 transition-all duration-200 bg-white resize-y min-h-[120px];
   }
   
   .form-select {
