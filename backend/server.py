@@ -127,8 +127,8 @@ class SuccessGoals(BaseModel):
 
 class ContentCreate(BaseModel):
     title: str = Field(..., min_length=1)
-    content_type: str = Field(..., regex="^(text|image|video|carousel)$")
-    platform: str = Field(..., regex="^(instagram|tiktok|linkedin|youtube|twitter|facebook)$")
+    content_type: str = Field(..., pattern="^(text|image|video|carousel)$")
+    platform: str = Field(..., pattern="^(instagram|tiktok|linkedin|youtube|twitter|facebook)$")
     text_content: str = Field(..., min_length=1)
     hashtags: List[str] = Field(default=[])
     scheduled_for: Optional[datetime] = None
