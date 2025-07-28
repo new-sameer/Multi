@@ -156,6 +156,40 @@ class ContentResponse(BaseModel):
     performance_metrics: Dict[str, Any]
 
 # ================================
+# LLM Management Models (Phase 2)
+# ================================
+
+class LLMGenerateRequest(BaseModel):
+    prompt: str = Field(..., min_length=1, max_length=10000)
+    task_type: str = Field(default="general", pattern="^(general|content_generation|success_coaching|content_adaptation)$")
+    preferred_provider: Optional[str] = Field(default=None, pattern="^(ollama|groq)$")
+    max_tokens: int = Field(default=1000, ge=50, le=4000)
+    temperature: float = Field(default=0.7, ge=0.0, le=2.0)
+
+class LLMResponse(BaseModel):
+    content: str
+    provider: str
+    model: str
+    tokens_used: int
+    response_time: float
+    cost: float
+    quality_score: Optional[float] = None
+
+class ModelInfo(BaseModel):
+    name: str
+    provider: str
+    available: bool
+    size_gb: Optional[float] = None
+    context_length: Optional[int] = None
+    capabilities: List[str] = []
+
+class UsageStatistics(BaseModel):
+    period_days: int
+    user_id: Optional[str]
+    providers: List[Dict[str, Any]]
+    generated_at: datetime
+
+# ================================
 # Database Helper Functions
 # ================================
 
