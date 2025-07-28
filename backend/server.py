@@ -526,8 +526,284 @@ async def list_user_content(
     return content_list
 
 # ================================
-# Helper Functions
+# LLM Management Endpoints (Phase 2)
 # ================================
+
+@app.post("/api/v1/llm/generate", response_model=LLMResponse)
+async def generate_content_with_llm(
+    request: LLMGenerateRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Generate content using the Universal LLM Manager"""
+    if not llm_manager:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="LLM Manager not available"
+        )
+    
+    try:
+        # Convert string enums to proper enums
+        task_type = TaskType(request.task_type)
+        preferred_provider = LLMProvider(request.preferred_provider) if request.preferred_provider else None
+        
+        response = await llm_manager.generate_content(
+            prompt=request.prompt,
+            task_type=task_type,
+            preferred_provider=preferred_provider,
+            max_tokens=request.max_tokens,
+            temperature=request.temperature,
+            user_id=str(current_user["_id"])
+        )
+        
+        return LLMResponse(
+            content=response.content,
+            provider=response.provider,
+            model=response.model,
+            tokens_used=response.tokens_used,
+            response_time=response.response_time,
+            cost=response.cost,
+            quality_score=response.quality_score
+        )
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid parameter: {e}"
+        )
+    except Exception as e:
+        logger.error(f"LLM generation failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Content generation failed: {str(e)}"
+        )
+
+@app.get("/api/v1/llm/models", response_model=List[ModelInfo])
+async def get_available_models(current_user: dict = Depends(get_current_user)):
+    """Get list of available LLM models"""
+    if not llm_manager:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="LLM Manager not available"
+        )
+    
+    try:
+        models = await llm_manager.get_available_models()
+        return [
+            ModelInfo(
+                name=model.name,
+                provider=model.provider,
+                available=model.available,
+                size_gb=model.size_gb,
+                context_length=model.context_length,
+                capabilities=model.capabilities or []
+            ) for model in models
+        ]
+    except Exception as e:
+        logger.error(f"Failed to get available models: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get available models"
+        )
+
+@app.get("/api/v1/llm/usage-statistics", response_model=UsageStatistics)
+async def get_llm_usage_statistics(
+    days: int = 30,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get LLM usage statistics for the current user"""
+    if not llm_manager:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="LLM Manager not available"
+        )
+    
+    try:
+        stats = await llm_manager.get_usage_statistics(
+            user_id=str(current_user["_id"]),
+            days=days
+        )
+        
+        if "error" in stats:
+            raise Exception(stats["error"])
+        
+        return UsageStatistics(
+            period_days=stats["period_days"],
+            user_id=stats["user_id"],
+            providers=stats["providers"],
+            generated_at=stats["generated_at"]
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to get usage statistics: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get usage statistics"
+        )
+
+@app.get("/api/v1/llm/health")
+async def check_llm_health(current_user: dict = Depends(get_current_user)):
+    """Check health status of all LLM providers"""
+    if not llm_manager:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="LLM Manager not available"
+        )
+    
+    try:
+        health_status = {}
+        
+        # Check Ollama health
+        ollama_healthy = await llm_manager._check_ollama_health()
+        health_status["ollama"] = {
+            "status": "healthy" if ollama_healthy else "unhealthy",
+            "provider": "ollama",
+            "cost": "free"
+        }
+        
+        # Check Groq health
+        groq_healthy = llm_manager.groq_client is not None
+        health_status["groq"] = {
+            "status": "healthy" if groq_healthy else "unhealthy",
+            "provider": "groq",
+            "cost": "paid"
+        }
+        
+        return {
+            "timestamp": datetime.utcnow(),
+            "providers": health_status,
+            "overall_status": "healthy" if any(
+                provider["status"] == "healthy" 
+                for provider in health_status.values()
+            ) else "unhealthy"
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to check LLM health: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to check LLM health"
+        )
+
+# ================================
+# Enhanced Content Generation with LLM
+# ================================
+
+@app.post("/api/v1/content/generate")
+async def generate_content_with_ai(
+    platform: str = Field(..., pattern="^(instagram|tiktok|linkedin|youtube|twitter|facebook)$"),
+    content_type: str = Field(..., pattern="^(text|image|video|carousel)$"),
+    topic: str = Field(..., min_length=1, max_length=200),
+    target_audience: Optional[str] = None,
+    tone: str = Field(default="professional", pattern="^(professional|casual|funny|inspiring|educational)$"),
+    hashtag_count: int = Field(default=5, ge=0, le=30),
+    current_user: dict = Depends(get_current_user)
+):
+    """Generate AI-powered content for social media platforms"""
+    if not llm_manager:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="LLM Manager not available"
+        )
+    
+    try:
+        # Build content generation prompt
+        user_niche = current_user.get("niche", "general")
+        user_audience = target_audience or current_user.get("target_audience", "general audience")
+        
+        prompt = f"""Create a {tone} {content_type} post for {platform} about "{topic}".
+
+Target Audience: {user_audience}
+Niche: {user_niche}
+Platform: {platform}
+Content Type: {content_type}
+Tone: {tone}
+
+Requirements:
+- Write engaging content optimized for {platform}
+- Include {hashtag_count} relevant hashtags
+- Target the {user_audience} audience
+- Keep the {tone} tone throughout
+- Make it suitable for {content_type} format
+
+Format your response as:
+Content: [Your main content here]
+Hashtags: [List of hashtags separated by spaces]
+"""
+        
+        # Generate content using LLM
+        response = await llm_manager.generate_content(
+            prompt=prompt,
+            task_type=TaskType.CONTENT_GENERATION,
+            max_tokens=800,
+            temperature=0.8,
+            user_id=str(current_user["_id"])
+        )
+        
+        # Parse the generated content
+        content_lines = response.content.split('\n')
+        main_content = ""
+        hashtags = []
+        
+        for line in content_lines:
+            if line.startswith("Content:"):
+                main_content = line.replace("Content:", "").strip()
+            elif line.startswith("Hashtags:"):
+                hashtag_text = line.replace("Hashtags:", "").strip()
+                hashtags = [tag.strip() for tag in hashtag_text.split() if tag.startswith('#')]
+        
+        # If parsing fails, use the raw content
+        if not main_content:
+            main_content = response.content
+            # Extract hashtags from content if present
+            import re
+            hashtags = re.findall(r'#\w+', main_content)
+        
+        # Create content entry in database
+        content_dict = {
+            "_id": ObjectId(),
+            "user_id": str(current_user["_id"]),
+            "title": f"AI Generated: {topic}",
+            "content_type": content_type,
+            "platform": platform,
+            "text_content": main_content,
+            "hashtags": hashtags[:hashtag_count],  # Limit to requested count
+            "status": "draft",
+            "quality_score": 0.8,  # Default AI quality score
+            "viral_potential": 0.6,  # Default viral potential
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+            "performance_metrics": {},
+            "ai_generated": True,
+            "generation_metadata": {
+                "provider": response.provider,
+                "model": response.model,
+                "tokens_used": response.tokens_used,
+                "cost": response.cost,
+                "generation_time": response.response_time
+            }
+        }
+        
+        # Save to database
+        result = await database.contents.insert_one(content_dict)
+        content_dict = convert_objectid_to_str(content_dict)
+        
+        return {
+            "content": ContentResponse(**content_dict),
+            "generation_info": {
+                "provider": response.provider,
+                "model": response.model,
+                "tokens_used": response.tokens_used,
+                "cost": response.cost,
+                "response_time": response.response_time
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"AI content generation failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"AI content generation failed: {str(e)}"
+        )
 
 async def create_initial_success_journey(user_id: str, goals: Optional[dict] = None):
     """Create initial success journey for a new user."""
