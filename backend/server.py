@@ -189,6 +189,14 @@ class UsageStatistics(BaseModel):
     providers: List[Dict[str, Any]]
     generated_at: datetime
 
+class AIContentRequest(BaseModel):
+    platform: str = Field(..., pattern="^(instagram|tiktok|linkedin|youtube|twitter|facebook)$")
+    content_type: str = Field(..., pattern="^(text|image|video|carousel)$")
+    topic: str = Field(..., min_length=1, max_length=200)
+    target_audience: Optional[str] = None
+    tone: str = Field(default="professional", pattern="^(professional|casual|funny|inspiring|educational)$")
+    hashtag_count: int = Field(default=5, ge=0, le=30)
+
 # ================================
 # Database Helper Functions
 # ================================
