@@ -49,7 +49,7 @@ llm_manager: Optional[UniversalLLMManager] = None
 async def lifespan(app: FastAPI):
     """Application lifespan manager for startup and shutdown events."""
     # Startup
-    global mongo_client, database
+    global mongo_client, database, llm_manager
     try:
         mongo_client = AsyncIOMotorClient(MONGO_URL)
         database = mongo_client.get_default_database()
@@ -57,6 +57,10 @@ async def lifespan(app: FastAPI):
         
         # Create indexes for better performance
         await create_indexes()
+        
+        # Initialize LLM Manager
+        llm_manager = UniversalLLMManager(database)
+        logger.info("LLM Manager initialized successfully")
         
         yield
     except Exception as e:
