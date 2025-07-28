@@ -208,6 +208,11 @@ async def create_indexes():
         # Success journeys indexes
         await database.success_journeys.create_index("user_id", unique=True)
         
+        # LLM usage logs indexes
+        await database.llm_usage_logs.create_index([("user_id", 1), ("timestamp", -1)])
+        await database.llm_usage_logs.create_index("provider")
+        await database.llm_usage_logs.create_index("task_type")
+        
         logger.info("Database indexes created successfully")
     except Exception as e:
         logger.error(f"Failed to create database indexes: {e}")
