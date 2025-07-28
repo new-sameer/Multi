@@ -43,6 +43,7 @@ security = HTTPBearer()
 # Database client
 mongo_client: Optional[AsyncIOMotorClient] = None
 database = None
+llm_manager: Optional[UniversalLLMManager] = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
