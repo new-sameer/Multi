@@ -698,12 +698,7 @@ async def check_llm_health(current_user: dict = Depends(get_current_user)):
 
 @app.post("/api/v1/content/generate")
 async def generate_content_with_ai(
-    platform: str,
-    content_type: str,
-    topic: str,
-    target_audience: Optional[str] = None,
-    tone: str = "professional",
-    hashtag_count: int = 5,
+    request: AIContentRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """Generate AI-powered content for social media platforms"""
@@ -716,22 +711,22 @@ async def generate_content_with_ai(
     try:
         # Build content generation prompt
         user_niche = current_user.get("niche", "general")
-        user_audience = target_audience or current_user.get("target_audience", "general audience")
+        user_audience = request.target_audience or current_user.get("target_audience", "general audience")
         
-        prompt = f"""Create a {tone} {content_type} post for {platform} about "{topic}".
+        prompt = f"""Create a {request.tone} {request.content_type} post for {request.platform} about "{request.topic}".
 
 Target Audience: {user_audience}
 Niche: {user_niche}
-Platform: {platform}
-Content Type: {content_type}
-Tone: {tone}
+Platform: {request.platform}
+Content Type: {request.content_type}
+Tone: {request.tone}
 
 Requirements:
-- Write engaging content optimized for {platform}
-- Include {hashtag_count} relevant hashtags
+- Write engaging content optimized for {request.platform}
+- Include {request.hashtag_count} relevant hashtags
 - Target the {user_audience} audience
-- Keep the {tone} tone throughout
-- Make it suitable for {content_type} format
+- Keep the {request.tone} tone throughout
+- Make it suitable for {request.content_type} format
 
 Format your response as:
 Content: [Your main content here]
@@ -770,11 +765,11 @@ Hashtags: [List of hashtags separated by spaces]
         content_dict = {
             "_id": ObjectId(),
             "user_id": str(current_user["_id"]),
-            "title": f"AI Generated: {topic}",
-            "content_type": content_type,
-            "platform": platform,
+            "title": f"AI Generated: {request.topic}",
+            "content_type": request.content_type,
+            "platform": request.platform,
             "text_content": main_content,
-            "hashtags": hashtags[:hashtag_count],  # Limit to requested count
+            "hashtags": hashtags[:request.hashtag_count],  # Limit to requested count
             "status": "draft",
             "quality_score": 0.8,  # Default AI quality score
             "viral_potential": 0.6,  # Default viral potential
