@@ -17,6 +17,10 @@ import httpx
 import ollama
 from groq import AsyncGroq
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
