@@ -22,6 +22,9 @@ import jwt
 from bson import ObjectId
 import logging
 
+# Import LLM Manager
+from services.llm_manager import UniversalLLMManager, TaskType, LLMProvider
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
