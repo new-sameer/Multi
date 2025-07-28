@@ -690,12 +690,12 @@ async def check_llm_health(current_user: dict = Depends(get_current_user)):
 
 @app.post("/api/v1/content/generate")
 async def generate_content_with_ai(
-    platform: str = Field(..., pattern="^(instagram|tiktok|linkedin|youtube|twitter|facebook)$"),
-    content_type: str = Field(..., pattern="^(text|image|video|carousel)$"),
-    topic: str = Field(..., min_length=1, max_length=200),
+    platform: str,
+    content_type: str,
+    topic: str,
     target_audience: Optional[str] = None,
-    tone: str = Field(default="professional", pattern="^(professional|casual|funny|inspiring|educational)$"),
-    hashtag_count: int = Field(default=5, ge=0, le=30),
+    tone: str = "professional",
+    hashtag_count: int = 5,
     current_user: dict = Depends(get_current_user)
 ):
     """Generate AI-powered content for social media platforms"""
