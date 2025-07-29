@@ -6,7 +6,8 @@ Centralized environment variable handling and configuration settings
 
 import os
 from typing import List, Optional
-from pydantic import BaseSettings, validator
+from pydantic_settings import BaseSettings
+from pydantic import validator
 from dotenv import load_dotenv
 
 # Load environment variables
