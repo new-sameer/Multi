@@ -827,3 +827,76 @@ class UniversalLLMManager:
         except Exception as e:
             logger.error(f"Failed to get usage statistics: {e}")
             return {"error": str(e)}
+    
+    async def get_provider_health_status(self) -> Dict[str, Any]:
+        """Get comprehensive health status of all LLM providers"""
+        
+        providers_status = {}
+        
+        # Check Ollama
+        try:
+            ollama_healthy = await self._check_ollama_health()
+            if ollama_healthy:
+                models = await self.ollama_client.list()
+                providers_status["ollama"] = {
+                    "status": "healthy",
+                    "models_available": len(models.get("models", [])),
+                    "connection": "active"
+                }
+            else:
+                providers_status["ollama"] = {
+                    "status": "unhealthy",
+                    "models_available": 0,
+                    "connection": "failed"
+                }
+        except Exception as e:
+            providers_status["ollama"] = {
+                "status": "error",
+                "error": str(e)
+            }
+        
+        # Check other providers
+        for provider_name, client in [
+            ("groq", self.groq_client),
+            ("openai", self.openai_client), 
+            ("claude", self.claude_client),
+            ("perplexity", self.perplexity_client)
+        ]:
+            if client:
+                providers_status[provider_name] = {
+                    "status": "healthy",
+                    "connection": "active",
+                    "models_available": len(self.model_configs.get(provider_name, {}))
+                }
+            else:
+                providers_status[provider_name] = {
+                    "status": "unavailable",
+                    "connection": "not_configured",
+                    "reason": f"{provider_name.upper()} API key not provided"
+                }
+        
+        # Determine overall status
+        healthy_providers = [p for p in providers_status.values() if p["status"] == "healthy"]
+        overall_status = "healthy" if len(healthy_providers) > 0 else "unhealthy"
+        
+        return {
+            "overall_status": overall_status,
+            "providers": providers_status,
+            "healthy_provider_count": len(healthy_providers),
+            "timestamp": datetime.utcnow(),
+            "recommendation": self._get_provider_recommendation(providers_status)
+        }
+    
+    def _get_provider_recommendation(self, providers_status: Dict) -> str:
+        """Get recommendation based on provider status"""
+        
+        healthy_providers = [name for name, status in providers_status.items() if status["status"] == "healthy"]
+        
+        if "ollama" in healthy_providers:
+            return "Ollama is available for free local generation"
+        elif "groq" in healthy_providers:
+            return "Groq is available for fast cloud generation"
+        elif healthy_providers:
+            return f"Available providers: {', '.join(healthy_providers)}"
+        else:
+            return "No healthy providers available. Please check your API keys and Ollama installation."
