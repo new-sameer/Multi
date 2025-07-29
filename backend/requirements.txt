@@ -17,7 +17,7 @@ PyJWT==2.8.0
 pydantic[email]==2.5.0
 
 # HTTP Requests
-httpx==0.25.2
+httpx==0.26.0
 
 # Environment Variables
 python-dotenv==1.0.0
