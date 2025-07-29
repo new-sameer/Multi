@@ -411,6 +411,128 @@ class UniversalLLMManager:
             logger.error(f"Groq generation failed: {e}")
             raise
     
+    async def _generate_with_openai(
+        self,
+        prompt: str,
+        model: str,
+        max_tokens: int,
+        temperature: float
+    ) -> Dict[str, Any]:
+        """Generate content using OpenAI"""
+        
+        if not self.openai_client:
+            raise Exception("OpenAI client not available")
+        
+        try:
+            completion = await self.openai_client.chat.completions.create(
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                top_p=0.9
+            )
+            
+            content = completion.choices[0].message.content
+            tokens_used = completion.usage.total_tokens
+            
+            # Calculate cost
+            model_config = self.model_configs["openai"].get(model, {})
+            cost_per_token = model_config.get("cost_per_token", 0.0)
+            cost = tokens_used * cost_per_token
+            
+            return {
+                "content": content,
+                "tokens_used": tokens_used,
+                "cost": cost
+            }
+            
+        except Exception as e:
+            logger.error(f"OpenAI generation failed: {e}")
+            raise
+    
+    async def _generate_with_claude(
+        self,
+        prompt: str,
+        model: str,
+        max_tokens: int,
+        temperature: float
+    ) -> Dict[str, Any]:
+        """Generate content using Claude"""
+        
+        if not self.claude_client:
+            raise Exception("Claude client not available")
+        
+        try:
+            message = await self.claude_client.messages.create(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
+            )
+            
+            content = message.content[0].text
+            tokens_used = message.usage.input_tokens + message.usage.output_tokens
+            
+            # Calculate cost
+            model_config = self.model_configs["claude"].get(model, {})
+            cost_per_token = model_config.get("cost_per_token", 0.0)
+            cost = tokens_used * cost_per_token
+            
+            return {
+                "content": content,
+                "tokens_used": tokens_used,
+                "cost": cost
+            }
+            
+        except Exception as e:
+            logger.error(f"Claude generation failed: {e}")
+            raise
+    
+    async def _generate_with_perplexity(
+        self,
+        prompt: str,
+        model: str,
+        max_tokens: int,
+        temperature: float
+    ) -> Dict[str, Any]:
+        """Generate content using Perplexity"""
+        
+        if not self.perplexity_client:
+            raise Exception("Perplexity client not available")
+        
+        try:
+            completion = await self.perplexity_client.chat.completions.create(
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                top_p=0.9
+            )
+            
+            content = completion.choices[0].message.content
+            tokens_used = completion.usage.total_tokens
+            
+            # Calculate cost
+            model_config = self.model_configs["perplexity"].get(model, {})
+            cost_per_token = model_config.get("cost_per_token", 0.0)
+            cost = tokens_used * cost_per_token
+            
+            return {
+                "content": content,
+                "tokens_used": tokens_used,
+                "cost": cost
+            }
+            
+        except Exception as e:
+            logger.error(f"Perplexity generation failed: {e}")
+            raise
+    
     async def _fallback_to_groq(
         self,
         prompt: str,
