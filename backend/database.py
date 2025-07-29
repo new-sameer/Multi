@@ -57,7 +57,7 @@ class DatabaseManager:
     async def _create_indexes(self):
         """Create database indexes for better performance"""
         try:
-            if not self.database:
+            if self.database is None:
                 return
             
             # User collection indexes
