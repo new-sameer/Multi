@@ -758,6 +758,39 @@ class UniversalLLMManager:
                     capabilities=config.get("capabilities", [])
                 ))
         
+        # Get OpenAI models
+        if self.openai_client:
+            for model_name, config in self.model_configs["openai"].items():
+                models.append(ModelInfo(
+                    name=model_name,
+                    provider="openai",
+                    available=True,
+                    context_length=config.get("context_length"),
+                    capabilities=config.get("capabilities", [])
+                ))
+        
+        # Get Claude models
+        if self.claude_client:
+            for model_name, config in self.model_configs["claude"].items():
+                models.append(ModelInfo(
+                    name=model_name,
+                    provider="claude",
+                    available=True,
+                    context_length=config.get("context_length"),
+                    capabilities=config.get("capabilities", [])
+                ))
+        
+        # Get Perplexity models
+        if self.perplexity_client:
+            for model_name, config in self.model_configs["perplexity"].items():
+                models.append(ModelInfo(
+                    name=model_name,
+                    provider="perplexity",
+                    available=True,
+                    context_length=config.get("context_length"),
+                    capabilities=config.get("capabilities", [])
+                ))
+        
         return models
     
     async def get_usage_statistics(self, user_id: Optional[str] = None, days: int = 30) -> Dict[str, Any]:
