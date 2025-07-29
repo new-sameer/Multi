@@ -87,12 +87,15 @@ class Settings(BaseSettings):
     CONNECTION_POOL_SIZE: int = 10
     DATABASE_TIMEOUT: int = 30
     
-    @validator('CORS_ORIGINS', pre=True)
-    def parse_cors_origins(cls, v):
+    @model_validator(mode='before')
+    @classmethod
+    def parse_cors_origins(cls, data):
         """Parse CORS origins from string or list"""
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(',')]
-        return v
+        if isinstance(data, dict) and 'CORS_ORIGINS' in data:
+            cors_origins = data['CORS_ORIGINS']
+            if isinstance(cors_origins, str):
+                data['CORS_ORIGINS'] = [origin.strip() for origin in cors_origins.split(',')]
+        return data
     
     class Config:
         env_file = ".env"
