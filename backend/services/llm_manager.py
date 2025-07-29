@@ -194,6 +194,30 @@ class UniversalLLMManager:
             else:
                 logger.warning("Groq API key not found")
             
+            # Initialize OpenAI client
+            if self.openai_api_key:
+                self.openai_client = AsyncOpenAI(api_key=self.openai_api_key)
+                logger.info("OpenAI client initialized successfully")
+            else:
+                logger.warning("OpenAI API key not found")
+            
+            # Initialize Claude client
+            if self.claude_api_key:
+                self.claude_client = anthropic.AsyncAnthropic(api_key=self.claude_api_key)
+                logger.info("Claude client initialized successfully")
+            else:
+                logger.warning("Claude API key not found")
+            
+            # Initialize Perplexity client
+            if self.perplexity_api_key:
+                self.perplexity_client = AsyncOpenAI(
+                    api_key=self.perplexity_api_key,
+                    base_url="https://api.perplexity.ai"
+                )
+                logger.info("Perplexity client initialized successfully")
+            else:
+                logger.warning("Perplexity API key not found")
+            
             # Initialize Ollama client
             try:
                 self.ollama_client = ollama.AsyncClient(host=self.ollama_base_url)
