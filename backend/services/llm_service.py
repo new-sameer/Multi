@@ -7,6 +7,7 @@ Enhanced wrapper around the Universal LLM Manager with additional business logic
 import logging
 from datetime import datetime
 from typing import Optional, Dict, Any, List
+from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from services.llm_manager import UniversalLLMManager, TaskType, LLMProvider, LLMResponse, ModelInfo
