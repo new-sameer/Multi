@@ -173,6 +173,3 @@ async def logout_user(current_user: dict = Depends(get_current_user)):
     # by removing the token. For enhanced security, you could implement
     # a token blacklist stored in Redis.
     return {"message": "Logged out successfully"}
-
-# Import dependencies at the end to avoid circular imports
-from dependencies import get_current_user
