@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import api from '../utils/api';
+import api from '../services/api';
 
 const LLMTestConsole = ({ availableModels }) => {
   const [prompt, setPrompt] = useState('');
