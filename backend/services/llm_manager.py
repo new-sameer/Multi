@@ -599,23 +599,25 @@ class UniversalLLMManager:
         # If preferred provider is specified, try to use it
         if preferred_provider:
             model = await self._get_best_model_for_provider(preferred_provider, task_type)
-            if model:
+            if model and await self._is_provider_available(preferred_provider):
                 return preferred_provider, model
         
-        # Check Ollama availability first (free)
-        ollama_available = await self._check_ollama_health()
-        if ollama_available:
-            model = await self._get_best_model_for_provider(LLMProvider.OLLAMA, task_type)
-            if model:
-                return LLMProvider.OLLAMA, model
+        # Priority order: Ollama (free) -> Groq (fast) -> OpenAI -> Claude -> Perplexity
+        provider_priority = [
+            LLMProvider.OLLAMA,
+            LLMProvider.GROQ,
+            LLMProvider.OPENAI,
+            LLMProvider.CLAUDE,
+            LLMProvider.PERPLEXITY
+        ]
         
-        # Fallback to Groq
-        if self.groq_client:
-            model = await self._get_best_model_for_provider(LLMProvider.GROQ, task_type)
-            if model:
-                return LLMProvider.GROQ, model
+        for provider in provider_priority:
+            if await self._is_provider_available(provider):
+                model = await self._get_best_model_for_provider(provider, task_type)
+                if model:
+                    return provider, model
         
-        # Default fallback
+        # Final fallback
         return LLMProvider.GROQ, "llama3-8b-8192"
     
     async def _get_best_model_for_provider(
