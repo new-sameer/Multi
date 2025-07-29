@@ -658,6 +658,24 @@ class UniversalLLMManager:
             logger.warning(f"Ollama health check failed: {e}")
             return False
     
+    async def _is_provider_available(self, provider: LLMProvider) -> bool:
+        """Check if a provider is available"""
+        try:
+            if provider == LLMProvider.OLLAMA:
+                return await self._check_ollama_health()
+            elif provider == LLMProvider.GROQ:
+                return self.groq_client is not None
+            elif provider == LLMProvider.OPENAI:
+                return self.openai_client is not None
+            elif provider == LLMProvider.CLAUDE:
+                return self.claude_client is not None
+            elif provider == LLMProvider.PERPLEXITY:
+                return self.perplexity_client is not None
+            else:
+                return False
+        except Exception:
+            return False
+    
     async def _is_ollama_model_available(self, model: str) -> bool:
         """Check if a specific Ollama model is available"""
         try:
