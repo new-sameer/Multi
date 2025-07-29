@@ -258,39 +258,7 @@ class LLMService:
             dict: Health status information
         """
         try:
-            health_status = {}
-            
-            # Check Ollama health
-            ollama_healthy = await self.llm_manager._check_ollama_health()
-            health_status["ollama"] = {
-                "status": "healthy" if ollama_healthy else "unhealthy",
-                "provider": "ollama",
-                "cost": "free",
-                "priority": 1
-            }
-            
-            # Check Groq health
-            groq_healthy = self.llm_manager.groq_client is not None
-            health_status["groq"] = {
-                "status": "healthy" if groq_healthy else "unhealthy",
-                "provider": "groq",
-                "cost": "paid",
-                "priority": 2
-            }
-            
-            # Determine overall status
-            overall_status = "healthy" if any(
-                provider["status"] == "healthy" 
-                for provider in health_status.values()
-            ) else "unhealthy"
-            
-            return {
-                "timestamp": datetime.utcnow(),
-                "providers": health_status,
-                "overall_status": overall_status,
-                "recommendation": self._get_health_recommendation(health_status)
-            }
-            
+            return await self.llm_manager.get_provider_health_status()
         except Exception as e:
             logger.error(f"Failed to check LLM health: {e}")
             return {
