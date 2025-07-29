@@ -144,6 +144,14 @@ function App() {
                 }
               />
               <Route
+                path="/llm-management"
+                element={
+                  <ProtectedRoute>
+                    <LLMManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/profile"
                 element={
                   <ProtectedRoute>
