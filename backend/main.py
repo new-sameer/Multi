@@ -120,16 +120,10 @@ async def health_check_endpoint():
         
         if llm_manager:
             try:
-                # Check Ollama health
-                ollama_healthy = await llm_manager._check_ollama_health()
-                groq_healthy = llm_manager.groq_client is not None
-                
-                llm_status = {
-                    "ollama": "healthy" if ollama_healthy else "unhealthy",
-                    "groq": "healthy" if groq_healthy else "unhealthy"
-                }
-                
-                llm_healthy = ollama_healthy or groq_healthy
+                # Get comprehensive provider health
+                provider_health = await llm_manager.get_provider_health_status()
+                llm_status = provider_health["providers"]
+                llm_healthy = provider_health["overall_status"] == "healthy"
                 
             except Exception as e:
                 logger.warning(f"LLM health check failed: {e}")
