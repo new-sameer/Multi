@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../utils/api';
+import api from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import LLMProviderCard from '../components/LLMProviderCard';
 import ModelComparisonTable from '../components/ModelComparisonTable';
