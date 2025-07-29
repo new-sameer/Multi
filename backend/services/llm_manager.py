@@ -16,8 +16,10 @@ import json
 import httpx
 import ollama
 from groq import AsyncGroq
+from openai import AsyncOpenAI
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from dotenv import load_dotenv
+import anthropic
 
 # Load environment variables
 load_dotenv()
