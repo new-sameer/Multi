@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from database import get_database
+from dependencies import get_current_user
 from services.auth_service import AuthService
 from models.auth import UserCreate, UserLogin, TokenResponse, PasswordChange
 from exceptions import UserAlreadyExistsError, InvalidCredentialsError, DatabaseError
