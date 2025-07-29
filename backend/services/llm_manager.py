@@ -133,6 +133,7 @@ class UniversalLLMManager:
                 logger.info("Ollama client initialized successfully")
             except Exception as e:
                 logger.warning(f"Failed to initialize Ollama client: {e}")
+                self.ollama_client = None
                 
         except Exception as e:
             logger.error(f"Failed to initialize LLM clients: {e}")
