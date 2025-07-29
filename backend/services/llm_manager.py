@@ -265,6 +265,27 @@ class UniversalLLMManager:
                     max_tokens=max_tokens,
                     temperature=temperature
                 )
+            elif selected_provider == LLMProvider.OPENAI:
+                response = await self._generate_with_openai(
+                    prompt=prompt,
+                    model=selected_model,
+                    max_tokens=max_tokens,
+                    temperature=temperature
+                )
+            elif selected_provider == LLMProvider.CLAUDE:
+                response = await self._generate_with_claude(
+                    prompt=prompt,
+                    model=selected_model,
+                    max_tokens=max_tokens,
+                    temperature=temperature
+                )
+            elif selected_provider == LLMProvider.PERPLEXITY:
+                response = await self._generate_with_perplexity(
+                    prompt=prompt,
+                    model=selected_model,
+                    max_tokens=max_tokens,
+                    temperature=temperature
+                )
             else:
                 raise ValueError(f"Unsupported provider: {selected_provider}")
             
