@@ -29,6 +29,10 @@ logger = logging.getLogger(__name__)
 class LLMProvider(str, Enum):
     OLLAMA = "ollama"
     GROQ = "groq"
+    OPENAI = "openai"
+    CLAUDE = "claude"
+    PERPLEXITY = "perplexity"
+    META_LLAMA = "meta_llama"
 
 class TaskType(str, Enum):
     CONTENT_GENERATION = "content_generation"
