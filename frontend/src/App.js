@@ -17,6 +17,7 @@ import Dashboard from './pages/Dashboard';
 import OnboardingPage from './pages/OnboardingPage';
 import ContentCreator from './pages/ContentCreator';
 import ContentLibrary from './pages/ContentLibrary';
+import LLMManagement from './pages/LLMManagement';
 import ProfilePage from './pages/ProfilePage';
 
 import './App.css';
