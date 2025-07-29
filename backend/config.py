@@ -65,7 +65,12 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     
     # CORS Configuration
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    CORS_ORIGINS_STR: str = "http://localhost:3000,http://127.0.0.1:3000"
+    
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        """Parse CORS origins from string"""
+        return [origin.strip() for origin in self.CORS_ORIGINS_STR.split(',')]
     
     # File Upload Configuration
     MAX_FILE_SIZE: int = 10485760  # 10MB in bytes
