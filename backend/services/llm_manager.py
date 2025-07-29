@@ -126,6 +126,61 @@ class UniversalLLMManager:
                     "quality_score": 0.9,
                     "speed_score": 0.92
                 }
+            },
+            "openai": {
+                "gpt-4": {
+                    "context_length": 8192,
+                    "capabilities": ["general", "content_generation", "coaching", "reasoning"],
+                    "cost_per_token": 0.00003,
+                    "quality_score": 0.98,
+                    "speed_score": 0.7
+                },
+                "gpt-4-turbo": {
+                    "context_length": 128000,
+                    "capabilities": ["general", "content_generation", "coaching", "reasoning"],
+                    "cost_per_token": 0.00001,
+                    "quality_score": 0.97,
+                    "speed_score": 0.85
+                },
+                "gpt-3.5-turbo": {
+                    "context_length": 16384,
+                    "capabilities": ["general", "content_generation"],
+                    "cost_per_token": 0.0000005,
+                    "quality_score": 0.85,
+                    "speed_score": 0.95
+                }
+            },
+            "claude": {
+                "claude-3-5-sonnet-20241022": {
+                    "context_length": 200000,
+                    "capabilities": ["general", "content_generation", "coaching", "reasoning"],
+                    "cost_per_token": 0.000003,
+                    "quality_score": 0.99,
+                    "speed_score": 0.8
+                },
+                "claude-3-haiku-20240307": {
+                    "context_length": 200000,
+                    "capabilities": ["general", "content_generation"],
+                    "cost_per_token": 0.00000025,
+                    "quality_score": 0.88,
+                    "speed_score": 0.9
+                }
+            },
+            "perplexity": {
+                "llama-3.1-sonar-small-128k-online": {
+                    "context_length": 127072,
+                    "capabilities": ["general", "content_generation", "web_search"],
+                    "cost_per_token": 0.0000002,
+                    "quality_score": 0.85,
+                    "speed_score": 0.85
+                },
+                "llama-3.1-sonar-large-128k-online": {
+                    "context_length": 127072,
+                    "capabilities": ["general", "content_generation", "coaching", "web_search"],
+                    "cost_per_token": 0.000001,
+                    "quality_score": 0.9,
+                    "speed_score": 0.8
+                }
             }
         }
     
