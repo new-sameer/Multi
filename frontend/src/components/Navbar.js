@@ -7,6 +7,7 @@ import {
   DocumentDuplicateIcon,
   UserCircleIcon,
   ChartBarIcon,
+  CpuChipIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
