@@ -37,6 +37,7 @@ pytest-asyncio>=0.21.1
 # LLM Integration (Phase 2)
 groq>=0.10.0
 ollama>=0.3.0
+anthropic>=0.38.0
 
 # Additional AI/ML libraries
 openai>=1.90.0
