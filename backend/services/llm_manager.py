@@ -68,10 +68,16 @@ class UniversalLLMManager:
         # Initialize providers
         self.groq_client = None
         self.ollama_client = None
+        self.openai_client = None
+        self.claude_client = None
+        self.perplexity_client = None
         
         # Configuration
         self.groq_api_key = os.environ.get("GROQ_API_KEY")
         self.ollama_base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
+        self.openai_api_key = os.environ.get("OPENAI_API_KEY")
+        self.claude_api_key = os.environ.get("CLAUDE_API_KEY")
+        self.perplexity_api_key = os.environ.get("PERPLEXITY_API_KEY")
         
         # Initialize clients
         self._initialize_clients()
