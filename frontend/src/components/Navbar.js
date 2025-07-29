@@ -18,6 +18,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
   { name: 'Create Content', href: '/create-content', icon: PencilSquareIcon },
   { name: 'Content Library', href: '/content-library', icon: DocumentDuplicateIcon },
+  { name: 'LLM Management', href: '/llm-management', icon: CpuChipIcon },
   { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
 ];
 
