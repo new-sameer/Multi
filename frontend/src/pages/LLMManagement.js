@@ -158,9 +158,21 @@ const LLMManagement = () => {
           </div>
         )}
 
+        {activeTab === 'configuration' && (
+          <div>
+            <ProviderConfiguration />
+          </div>
+        )}
+
+        {activeTab === 'ollama' && (
+          <div>
+            <OllamaManager />
+          </div>
+        )}
+
         {activeTab === 'models' && (
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Available Models</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Model Comparison</h2>
             <ModelComparisonTable models={availableModels} />
           </div>
         )}
