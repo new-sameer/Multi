@@ -61,7 +61,15 @@ async def lifespan(app: FastAPI):
         
         # Initialize LLM Manager
         llm_manager = UniversalLLMManager(database)
+        # Set LLM manager for routers (after manager initialization)
         set_llm_manager(llm_manager)
+
+        # Also set for new routers  
+        from routers.ollama import set_llm_manager as set_ollama_manager
+        from routers.providers import set_llm_manager as set_providers_manager
+
+        set_ollama_manager(llm_manager)
+        set_providers_manager(llm_manager)
         logger.info("LLM Manager initialized successfully")
         
         logger.info("Application startup completed successfully")
