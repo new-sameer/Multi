@@ -61,8 +61,10 @@ const LLMManagement = () => {
   };
 
   const tabs = [
-    { id: 'providers', name: 'Providers', icon: '🔧' },
-    { id: 'models', name: 'Models', icon: '🤖' },
+    { id: 'providers', name: 'Provider Status', icon: '🔧' },
+    { id: 'configuration', name: 'Configuration', icon: '⚙️' },
+    { id: 'ollama', name: 'Ollama Manager', icon: '🖥️' },
+    { id: 'models', name: 'Model Comparison', icon: '🤖' },
     { id: 'usage', name: 'Usage Stats', icon: '📊' },
     { id: 'console', name: 'Test Console', icon: '🧪' }
   ];
