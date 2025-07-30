@@ -7,6 +7,8 @@ import LLMProviderCard from '../components/LLMProviderCard';
 import ModelComparisonTable from '../components/ModelComparisonTable';
 import UsageStatistics from '../components/UsageStatistics';
 import LLMTestConsole from '../components/LLMTestConsole';
+import OllamaManager from '../components/OllamaManager';
+import ProviderConfiguration from '../components/ProviderConfiguration';
 
 const LLMManagement = () => {
   const { user } = useAuth();
