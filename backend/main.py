@@ -27,6 +27,8 @@ from routers.auth import router as auth_router
 from routers.users import router as users_router
 from routers.content import router as content_router
 from routers.llm import router as llm_router, set_llm_manager
+from routers.ollama import router as ollama_router
+from routers.providers import router as providers_router
 
 # Import services
 from services.llm_manager import UniversalLLMManager
