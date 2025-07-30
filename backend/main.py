@@ -107,6 +107,8 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(content_router)
 app.include_router(llm_router)
+app.include_router(ollama_router)
+app.include_router(providers_router)
 
 # Health check endpoint
 @app.get("/api/health")
