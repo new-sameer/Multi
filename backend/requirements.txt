@@ -19,6 +19,7 @@ pydantic-settings>=2.1.0
 
 # HTTP Requests
 httpx>=0.25.0
+httpcore>=1.0.0
 
 # Environment Variables
 python-dotenv>=1.0.0
