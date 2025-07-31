@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Test, Eye, EyeOff, ExternalLink, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { Save, Zap, Eye, EyeOff, ExternalLink, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 
 const ProviderConfiguration = () => {
   const [providers, setProviders] = useState([]);
