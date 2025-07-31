@@ -268,7 +268,7 @@ const ProviderConfiguration = () => {
                   </>
                 ) : (
                   <>
-                    <Test size={16} className="mr-2" />
+                    <Zap size={16} className="mr-2" />
                     Test Connection
                   </>
                 )}
